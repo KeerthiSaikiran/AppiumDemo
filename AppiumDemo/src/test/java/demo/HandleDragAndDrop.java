@@ -1,12 +1,19 @@
 package demo;
 
 import java.net.MalformedURLException;
+
 import java.net.URI;
 import java.net.URL;
 import java.time.Duration;
+import java.util.Arrays;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Pause;
+import org.openqa.selenium.interactions.PointerInput;
+import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -69,18 +76,62 @@ public class HandleDragAndDrop {
 		//Drag Dot 2
 		WebElement destination = driver.findElement(By.xpath("//android.view.View[@resource-id=\'io.appium.android.apis:id/drag_dot_2\']"));
 		
-		// Drag and Drop using Touch Class - Not working
-		TouchAction action = new TouchAction(driver);
-		action.longPress(longPressOptions().withElement(element(source))).moveTo(element(destination)).release().perform();
+//		// Drag and Drop using Touch Class - Not working
+//		TouchAction action = new TouchAction(driver);
+//		action.longPress(longPressOptions().withElement(element(source))).moveTo(element(destination)).release().perform();
+	
+		// find the center of the source and destination web elment
 		
-		// close app
-		driver.close();
+		Point sourceElementCenter = getCenter(source);
 		
-		//quit driver
-		driver.quit();
+		Point destinationElementCenter = getCenter(destination);
 		
+		//PointerInput class to create a sequence of actions 
+		//that move the pointer to the center of the element, 
+		//press down on the element, and then release the element.
 		
+		PointerInput finger1 = new PointerInput(PointerInput.Kind.TOUCH, "finger1");
 		
+		//Sequence object, which is a list of actions that will be performed on the device
+		
+		Sequence sequence = new Sequence(finger1, 1)
+				
+				// move finger to the starting position
+				.addAction(finger1.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), sourceElementCenter))
+				
+				// finger coming down to contact with the screen
+				.addAction(finger1.createPointerDown(PointerInput.MouseButton.LEFT .asArg()))
+				
+				.addAction(new Pause(finger1, Duration.ofMillis(588)))
+				
+				//move finger to the end position
+				.addAction(finger1.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), destinationElementCenter))
+				
+				// move the finger up
+				.addAction(finger1.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+		
+				//perform sequence of actions
+				//driver.perform(Collections.singletonList(sequence));
+		
+				driver.perform(Arrays.asList(sequence));
+				Thread.sleep(5000);
+				
+				
+				// close session
+				driver.quit();
 	}
-
+	
+	private static Point getCenter(WebElement element) {
+		
+		//get location of the element
+		Point location = element.getLocation();
+		
+		//get position of the element
+		Dimension size = element.getSize();
+		
+		//center point
+		Point center = new Point(location.x + size.width/2, location.y + size.height/2);
+		
+		return center;
+	}		
 }

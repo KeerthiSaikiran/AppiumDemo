@@ -55,6 +55,7 @@ public class BrowserAutomation {
 		System.out.println("Entering taj mahal in search box...");
 		searchBox.sendKeys("taj mahal");
 		
+		
 		//click on enter or search button to send
 		System.out.println("Clicking on Search...");
 		searchBox.sendKeys(Keys.ENTER);

@@ -40,6 +40,7 @@ public class BrowserAutomation {
 		
 		System.out.println("Started Driver...");
 		
+		
 		// go to google website
 		System.out.println("open google website...");
 		driver.get("https://www.google.com");

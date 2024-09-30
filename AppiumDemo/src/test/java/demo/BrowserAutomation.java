@@ -47,6 +47,14 @@ public class BrowserAutomation {
 		
 		Thread.sleep(5000);
 		
+		/*To inspect in mobile browser in android mobile
+		
+		Open the browser in the desktop the mobile is connected and then search for -> chrome://inspect/#devices
+		
+		We can inspect the page that is opened on the mobile device connected similarly like Appium inspector
+		
+		*/
+		
 		//find search bar
 		System.out.println("finding the search bar element...");
 		WebElement searchBox = driver.findElement(By.name("q"));
